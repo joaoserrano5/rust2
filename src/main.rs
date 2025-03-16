@@ -1,0 +1,29 @@
+use std::process::exit;
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+     if args.len() < 3 {
+         println!("Usage: {} <password> <length>", args[0]);
+         eprintln!("Please provide password and length");
+         exit(1);
+     }
+    let password = args[1].trim().to_string();
+    let length: usize = args[2].parse::<usize>().expect("Invalid length");
+    println!("{}", password_validator(password.as_str(), length));
+}
+
+//checking length and complexity of the password
+fn password_validator(password: &str, length: usize) -> String {
+
+    let has_lowercase: bool = password.chars().any(|c| c.is_lowercase());
+    let has_uppercase: bool = password.chars().any(|c| c.is_uppercase());
+    let has_digit: bool = password.chars().any(|c| c.is_digit(10));
+    let has_special: bool = password.chars().any(|c| "!@#$%^&*()_+{}<>?".contains(c));
+
+    if password.len() >= length && has_lowercase && has_uppercase && has_digit && !has_special {
+        "Strong Password".to_string()
+    } else {
+        "Weak Password".to_string()
+    }
+}
